@@ -1,11 +1,46 @@
 import { useState } from "react";
 import { ResizeMode, Video } from "expo-av";
 import { View, Text, TouchableOpacity, Image } from "react-native";
+import { Alert } from "react-native";
+
+import { deleteVideoPost } from "../lib/appwrite";
 
 import { icons } from "../constants";
 
-const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
+const VideoCard = ({ title, creator, avatar, thumbnail, video, postId }) => {
   const [play, setPlay] = useState(false);
+  const handleDelete = () => {
+    // Show confirmation popup
+    Alert.alert(
+      "Delete Confirmation",
+      "Are you sure you want to delete this item?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteVideoPost(postId);
+              Alert.alert("Success", "Video post deleted successfully");
+            } catch (error) {
+              Alert.alert(
+                "Error",
+                "Failed to delete the video post. Please try again."
+              );
+            } finally {
+              if (onDeleted) {
+                onDeleted(postId);
+              }
+            }
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <View className="flex flex-col items-center px-4 mb-14">
@@ -35,8 +70,26 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
           </View>
         </View>
 
+        {/* <View className="pt-2">
+          <Image
+            source={icons.deleteIcon}
+            className="w-5 h-5"
+            resizeMode="contain"
+          />
+        </View> */}
         <View className="pt-2">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
+          <TouchableOpacity
+            onPress={() => {
+              handleDelete();
+            }}
+            className="w-5 h-5"
+          >
+            <Image
+              source={icons.deleteIcon}
+              style={{ width: "100%", height: "100%" }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
         </View>
       </View>
 

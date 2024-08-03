@@ -254,3 +254,18 @@ export async function getLatestPosts() {
     throw new Error(error);
   }
 }
+
+// Delete Video Post
+export async function deleteVideoPost(postId) {
+  try {
+    await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.videoCollectionId,
+      postId
+    );
+
+    return { success: true, message: "Video post deleted successfully." };
+  } catch (error) {
+    throw new Error(error);
+  }
+}

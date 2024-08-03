@@ -4,7 +4,7 @@ import { FlatList, Image, RefreshControl, Text, View } from "react-native";
 
 import { images } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
-import { getAllPosts, getLatestPosts } from "../../lib/appwrite";
+import { de, getAllPosts, getLatestPosts } from "../../lib/appwrite";
 import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
 
 const Home = () => {
@@ -37,6 +37,10 @@ const Home = () => {
             video={item.video}
             creator={item.creator.username}
             avatar={item.creator.avatar}
+            postId={item.$id}
+            onDeleted={async (id) => {
+              await deleteVideoPost(id);
+            }}
           />
         )}
         ListHeaderComponent={() => (
